@@ -5,7 +5,7 @@
 #IGNORE token is used to indicate that 
 #this is a white space and can be ignore during calculation
 
-INTEGER, PLUS, EOF, IGNORE = "INTEGER", "PLUS", "EOF","IGNORE"
+INTEGER, PLUS, SUBTRACT, EOF, IGNORE = "INTEGER", "PLUS", "SUBTRACT", "EOF", "IGNORE"
 
 class Token(object):
     def __init__(self, type, value):
@@ -65,6 +65,11 @@ class Interpreter(object):
             self.pos += 1 
             return token 
         
+        if current_char == "-":
+            token = Token(SUBTRACT, current_char)
+            self.pos += 1
+            return token
+
         if current_char == " ":
             token = Token(IGNORE, current_char)
             self.pos += 1
@@ -84,6 +89,11 @@ class Interpreter(object):
         else:
             self.error()
 
+    def _opr(self, to_op, left_integer, right_integer):
+        if to_op.type == PLUS:
+            return (left_integer + right_integer)
+        else:
+            return (left_integer - right_integer)
 
     def expr(self):
         """expr -> INTEGER PLUS INTEGER"""
@@ -101,7 +111,11 @@ class Interpreter(object):
 
         # we expect the current token to be a '+' token
         op = self.current_token
-        self.eat(PLUS)
+        to_op = op
+        if op.type == PLUS:
+            self.eat(PLUS)
+        else:
+            self.eat(SUBTRACT)
 
         # we expect the current token to be a single-digit integer
         right_integer = ""
@@ -118,15 +132,15 @@ class Interpreter(object):
         # has been successfully found and the method can just
         # return the result of adding two integers, thus
         # effectively interpreting client input
-        result = int(left_integer) + int(right_integer)
-        return result 
+        result = self._opr(to_op, int(left_integer), int(right_integer))
+        return result
 
 def main():
     while True:
         try:
             #To run under python3 replace "raw_input" call 
             #with "input"
-            text = input("sum> ")
+            text = input("calc1> ")
         except EOFError:
             break 
         if not text:
