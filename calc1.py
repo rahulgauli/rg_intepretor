@@ -2,7 +2,10 @@
 #
 #EOF (End-of-file) token is used to indicate that 
 # there is no more input left for lexical analysis
-INTEGER, PLUS, EOF = "INTEGER", "PLUS", "EOF"
+#IGNORE token is used to indicate that 
+#this is a white space and can be ignore during calculation
+
+INTEGER, PLUS, EOF, IGNORE = "INTEGER", "PLUS", "EOF","IGNORE"
 
 class Token(object):
     def __init__(self, type, value):
@@ -62,6 +65,11 @@ class Interpreter(object):
             self.pos += 1 
             return token 
         
+        if current_char == " ":
+            token = Token(IGNORE, current_char)
+            self.pos += 1
+            return self.get_next_token() 
+
         self.error()
     
     def eat(self, token_type):
