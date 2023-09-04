@@ -5,13 +5,13 @@
 #IGNORE token is used to indicate that 
 #this is a white space and can be ignore during calculation
 
-INTEGER, PLUS, SUBTRACT, EOF, IGNORE = "INTEGER", "PLUS", "SUBTRACT", "EOF", "IGNORE"
+INTEGER, PLUS, MINUS, EOF, IGNORE = "INTEGER", "PLUS", "MINUS", "EOF", "IGNORE"
 
 class Token(object):
     def __init__(self, type, value):
-        #token type: INTEGER, PLUS or EOF
+        #token type: INTEGER, PLUS, MINUS, EOF or IGNORE
         self.type = type 
-        #token value: 0,1,2,3,4,5,6,7,8,9,+,or None
+        #token value: 0,1,2,3,4,5,6,7,8,9,+,-, or None
         self.value = value 
 
     def __str__(self):
@@ -66,7 +66,7 @@ class Interpreter(object):
             return token 
         
         if current_char == "-":
-            token = Token(SUBTRACT, current_char)
+            token = Token(MINUS, current_char)
             self.pos += 1
             return token
 
@@ -115,7 +115,7 @@ class Interpreter(object):
         if op.type == PLUS:
             self.eat(PLUS)
         else:
-            self.eat(SUBTRACT)
+            self.eat(MINUS)
 
         # we expect the current token to be a single-digit integer
         right_integer = ""
