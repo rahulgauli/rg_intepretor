@@ -5,7 +5,8 @@
 #IGNORE token is used to indicate that 
 #this is a white space and can be ignore during calculation
 
-INTEGER, PLUS, MINUS, MULTIPLY, EOF, IGNORE = "INTEGER", "PLUS", "MINUS", "MULTIPLY", "EOF", "IGNORE"
+INTEGER, PLUS, MINUS, MULTIPLY, DIVISION = "INTEGER", "PLUS", "MINUS", "MULTIPLY", "DIVISION"
+EOF, IGNORE = "EOF", "IGNORE"
 
 class Token(object):
     def __init__(self, type, value):
@@ -79,7 +80,12 @@ class Interpreter(object):
             token = Token(MULTIPLY, current_char)
             self.pos += 1
             return token
-
+    
+        if current_char == "/":
+            token = Token(DIVISION, current_char)
+            self.pos += 1 
+            return token
+        
         self.error()
     
     def eat(self, token_type):
@@ -101,6 +107,8 @@ class Interpreter(object):
             return (left_integer - right_integer)
         elif to_op.type == MULTIPLY:
             return (left_integer * right_integer)
+        elif to_op.type == DIVISION:
+            return (left_integer // right_integer)
 
     def expr(self):
         """expr -> INTEGER PLUS INTEGER"""
@@ -125,6 +133,8 @@ class Interpreter(object):
             self.eat(MINUS)
         elif op.type == MULTIPLY:
             self.eat(MULTIPLY)
+        elif op.type == DIVISION:
+            self.eat(DIVISION)
 
         # we expect the current token to be a single-digit integer
         right_integer = ""
