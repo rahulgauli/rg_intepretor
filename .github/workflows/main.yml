@@ -13,6 +13,6 @@ on:
 jobs:
   call-ci-reusable-workflows:
     name: CI - FastAPI
-    uses: rahulgauli/test_workflow/.github/workflows/scan_python.yaml
+    uses: rahulgauli/reusable-workflows/.github/workflows/scan_python.yaml
     with:
       PYTHON_TEST_COMMAND: python3 --version
