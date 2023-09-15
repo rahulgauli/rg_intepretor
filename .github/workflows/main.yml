@@ -1,0 +1,18 @@
+name: Build, Test, Publish FastAPI App
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened, edited]
+    paths-ignore:
+      - "**/*.md"
+      - "**/*.yaml"
+      - "**/*.yml"
+
+
+jobs:
+  call-ci-reusable-workflows:
+    name: CI - FastAPI
+    uses: rahulgauli/test_workflow/.github/workflows/scan_python.yaml
+    with:
+      PYTHON_TEST_COMMAND: python3 --version
